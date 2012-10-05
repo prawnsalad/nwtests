@@ -1,0 +1,28 @@
+<script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script>
+<script>
+
+	// Starting time to benchmark the connecting time
+	var time_start = new Date().getTime();
+
+	document.write('Connecting.. ');
+	var socket = io.connect('http://127.0.0.1:8080');
+
+
+	// Once connected, log the benchmark and start sending data
+	socket.on('connect', function () {
+		document.write('Connected in ' + (new Date().getTime() - parseInt(time_start, 10)).toString() + ' ms<br />');
+		sendData();
+	});
+
+
+	socket.on('echoresponse', function (data) {
+		document.write('Time: ' + (new Date().getTime() - parseInt(data, 10)).toString() + 'ms<br />');
+		setTimeout(sendData, 500);
+	});
+
+
+	function sendData() {
+		socket.emit('echoback', new Date().getTime());
+	}
+
+</script>
